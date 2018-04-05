@@ -65,7 +65,7 @@ View(up.enriched)
 
 #  We can view our enriched pathways 
 
-browseKEGG(up.enriched, 'sey00910')
+browseKEGG(up.enriched, 'sey02040')
 
 
 # Step 6: Find enriched KEGG modules
@@ -101,7 +101,7 @@ down.enriched <- enrichKEGG(gene = downregulated.subset$old_locus,
 View(down.enriched)
 
 # We can also view this pathway
-browseKEGG(up.enriched, 'sey00920')
+browseKEGG(up.enriched, 'sey01130')
 
 
 down.module <- enrichMKEGG(gene = downregulated.subset$old_locus,
