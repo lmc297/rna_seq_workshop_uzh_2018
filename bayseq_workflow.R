@@ -40,11 +40,7 @@ ordered.table <- cbind(infile$geneID,
                     infile$Strand, 
                     infile[,7:12], 
                     infile[,1:6])
-#ordered.table <- cbind(infile[,1:3],
-#                       infile$Length,
-#                       infile$Strand,
-#                       infile[,11:16],
-#                       infile[,5:10])
+
 
 # Rename Length and Strand columns 
 names(ordered.table)[1:5] <- c("geneID", "Start", "End", "Length", "Strand")
