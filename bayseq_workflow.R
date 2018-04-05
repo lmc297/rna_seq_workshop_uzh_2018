@@ -31,14 +31,23 @@ infile$Length <- infile$End-infile$Start+1
 
 # Reorder the columns, putting the Length column after End
 # Also moves wild-type to be before mutant
-ordered.table <- cbind(infile[,1:3],
-                       infile$Length,
-                       infile$Strand,
-                       infile[,11:16],
-                       infile[,5:10])
+
+######
+ordered.table <- cbind(infile$geneID, 
+                    infile$Start, 
+                    infile$End, 
+                    infile$Length, 
+                    infile$Strand, 
+                    infile[,7:12], 
+                    infile[,1:6])
+#ordered.table <- cbind(infile[,1:3],
+#                       infile$Length,
+#                       infile$Strand,
+#                       infile[,11:16],
+#                       infile[,5:10])
 
 # Rename Length and Strand columns 
-names(ordered.table)[4:5] <- c("Length", "Strand")
+names(ordered.table)[1:5] <- c("geneID", "Start", "End", "Length", "Strand")
 
 # Now let's select the sense samples and positive-strand genes
 
@@ -46,10 +55,10 @@ names(ordered.table)[4:5] <- c("Length", "Strand")
 strand.pos <- subset(ordered.table,ordered.table$Strand=="+")
 
 # Now, let's get rid of the antisense columns by selecting only the sense columns
-strand.pos <- select(strand.pos, 1:5, contains("_sense.cov"))
+strand.pos <- select(strand.pos, 1:5, contains(".s.sorted.bam"))
 
 # Finally, let's change the names of the columns to get rid of the suffix
-names(strand.pos) <- gsub("_sense.cov","",names(strand.pos))
+names(strand.pos) <- gsub(".s.sorted.bam","",names(strand.pos))
 
 # Now let's do the same thing for the anti-sense and minus-strand genes
 
@@ -57,10 +66,10 @@ names(strand.pos) <- gsub("_sense.cov","",names(strand.pos))
 strand.neg <- subset(ordered.table,ordered.table$Strand=="-")
 
 # Now, let's get rid of the sense columns by selecting only the antisense columns
-strand.neg <- select(strand.neg, 1:5, contains("_antisense.cov"))
+strand.neg <- select(strand.neg, 1:5, contains(".as.sorted.bam"))
 
 # Finally, let's change the names of the columns to get rid of the suffix
-names(strand.neg) <- gsub("_antisense.cov","",names(strand.neg))
+names(strand.neg) <- gsub(".as.sorted.bam","",names(strand.neg))
 
 # Now, let's merge the pos/sense and neg/antisense tables together
 coverage.table <- rbind(strand.pos,strand.neg)
@@ -133,10 +142,10 @@ abline(0.95,0,col="red")
 top_counts_DE$FC <- (rowSums(top_counts_DE[,5:7])/3)/(rowSums(top_counts_DE[,2:4])/3)
 
 # we'll define a gene as being upregulated if its FDR < 0.05 and fold change > 2.5
-upregulated <- which(top_counts_DE$FDR.DE<0.05 & top_counts_DE$FC >= 2.5)
+upregulated <- which(top_counts_DE$FDR.DE<0.05 & top_counts_DE$FC > 1)
 
 # we'll define a gene as being downregulatd if its FDR < 0.05 and its fold change < 0.4
-downregulated <- which(top_counts_DE$FDR.DE<0.05 & top_counts_DE$FC <= 0.4)
+downregulated <- which(top_counts_DE$FDR.DE<0.05 & top_counts_DE$FC < 1)
 
 # let's get the names of upregulated genes
 uplist <- top_counts_DE[upregulated,]
